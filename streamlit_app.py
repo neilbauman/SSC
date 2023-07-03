@@ -5,14 +5,14 @@ from google.oauth2.service_account import Credentials
 # Authenticate and access Google Sheets
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-creds = Credentials.from_service_account_file('path/to/service_account.json', scopes=scope)
+creds = Credentials.from_service_account_file('~/Downloads/scc-navigator-abbfd61b15dc.json', scopes=scope)
 gc = gspread.authorize(creds)
 
 # Google Sheets Configuration
-source_sheet_key = 'SOURCE_SHEET_KEY'
-target_sheet_key = 'TARGET_SHEET_KEY'
-source_sheet = gc.open_by_key(source_sheet_key).sheet1
-target_sheet = gc.open_by_key(target_sheet_key).sheet1
+source_sheet_key = '1hs8VpTGSAmf0wEW22UxGZB61MpFjUidp3tysF3BrGwg'
+target_sheet_key = '1hs8VpTGSAmf0wEW22UxGZB61MpFjUidp3tysF3BrGwg'
+source_sheet = gc.open_by_key(source_sheet_key).Source
+target_sheet = gc.open_by_key(target_sheet_key).Target
 
 # Page 1: Introduction
 st.title("Survey Tool")
