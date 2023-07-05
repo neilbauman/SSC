@@ -8,11 +8,10 @@ import os
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
+# Load credentials from secret
 google_sheets_credentials = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
 creds_dict = json.loads(google_sheets_credentials)
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-
-client = gspread.authorize(creds)
 
 # Google Sheets tab name
 sheet_name = "responses"
@@ -37,7 +36,8 @@ text_response = st.text_input("Enter your response")
 # Submit button
 if st.button("Submit"):
     # Access the Google Sheet
-    sheet = client.open("Survey Responses").worksheet(Target)
+    client = gspread.authorize(creds)
+    sheet = client.open("Survey Responses").worksheet(sheet_name)
     
     # Append responses to the Google Sheet
     response_values = [mcq_response, checkbox_response, text_response]
