@@ -31,7 +31,7 @@ text_response = st.text_input("Enter your response")
 # Submit button
 if st.button("Submit"):
     # Access the Google Sheet
-    sheet = client.open("Survey Responses").worksheet(sheet_name)
+    sheet = client.open("Survey Responses").worksheet(Target)
     
     # Append responses to the Google Sheet
     response_values = [mcq_response, checkbox_response, text_response]
