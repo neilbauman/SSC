@@ -1,47 +1,34 @@
 import streamlit as st
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import json
-import os
+import pandas as pd
+import dropbox
 
-# Google Sheets API credentials
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+# Dropbox access token
+DROPBOX_ACCESS_TOKEN = "sl.BhtsEQGSqdKrw6esPFLOWRbQjhnZr0uVXqk1v1XjL1oPKjlib6gjzdLd6EorlqqtS2kJrIiypFvO9uxyfZNbLAJb2LXeLrVEt1UlKSwA77Z09rM_vY76pMSiOYyQfAP3LbHHu0o"
 
-# Load credentials from secret
-google_sheets_credentials = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
-creds_dict = json.loads(google_sheets_credentials)
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+# Name of the Excel file
+EXCEL_FILE_NAME = "SSCExcel.xlsx"
 
-# Google Sheets tab name
-sheet_name = "responses"
+# Name of the worksheet containing the options
+WORKSHEET_NAME = "options"
 
-# Streamlit app
-st.title("Survey Form")
+# Name of the range in the worksheet
+RANGE_NAME = "test"
 
-# Ask multiple-choice question
-st.subheader("Multiple Choice Question")
-mcq_options = ['Option 1', 'Option 2', 'Option 3']
-mcq_response = st.selectbox("Select an option", mcq_options)
+# Connect to Dropbox
+dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
 
-# Ask checkbox question
-st.subheader("Checkbox Question")
-checkbox_options = ['Option 1', 'Option 2', 'Option 3']
-checkbox_response = st.multiselect("Select options", checkbox_options)
+# Download the Excel file
+_, res = dbx.files_download("/" + EXCEL_FILE_NAME)
+data = res.content
 
-# Ask text question
-st.subheader("Text Question")
-text_response = st.text_input("Enter your response")
+# Load the Excel file into a pandas DataFrame
+df = pd.read_excel(data, sheet_name=WORKSHEET_NAME, header=None, engine="openpyxl", range=RANGE_NAME)
 
-# Submit button
-if st.button("Submit"):
-    # Access the Google Sheet
-    client = gspread.authorize(creds)
-    sheet = client.open("Survey Responses").worksheet(sheet_name)
-    
-    # Append responses to the Google Sheet
-    response_values = [mcq_response, checkbox_response, text_response]
-    sheet.append_row(response_values)
-    
-    st.success("Responses submitted successfully!")
+# Convert DataFrame to a list of options
+options = df[0].tolist()
 
+# Display the checkbox survey question form
+selected_options = st.multiselect("Select options:", options)
+
+# Show the selected options
+st.write("Selected options:", selected_options)
