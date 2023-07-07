@@ -1,29 +1,26 @@
 import streamlit as st
-import openpyxl
 import dropbox
+import pandas as pd
 
-dropbox_access_token = "sl.BhslzSQeUA-9MywLRZK3QupDGNiwNzOCf-UowpduhfSRa-vBsIIJ6AUUVDpRUAyFnSlvyFF2ddXFYATzgmopiJub39mlc_wK5zUlh8Rprok_hxOM2EjZllb9u0Y2yVNqFt4Q8HvVSAOc"
-dbx = dropbox.Dropbox(dropbox_access_token)
+# Dropbox API configuration
+DROPBOX_ACCESS_TOKEN = "sl.BhslzSQeUA-9MywLRZK3QupDGNiwNzOCf-UowpduhfSRa-vBsIIJ6AUUVDpRUAyFnSlvyFF2ddXFYATzgmopiJub39mlc_wK5zUlh8Rprok_hxOM2EjZllb9u0Y2yVNqFt4Q8HvVSAOc"
 
-# Name of the Excel file
-file_path = "/SSCExcel.xlsx"
-_, res = dbx.files_download(file_path)
-content = res.content
-workbook = openpyxl.load_workbook(content)
+# Connect to Dropbox
+dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
 
-sheet_options = workbook["options"]
-test_range = sheet_options["test"]
-options = [cell.value for cell in test_range]
+# Load Excel file from Dropbox
+_, res = dbx.files_download("/SSCExcel.xlsx")
+df = pd.read_excel(res.content, sheet_name="options", range="test")
 
-
-st.title("SSC Navigator")
+# Display the form
+options = df["test"].tolist()
 selected_options = st.multiselect("Select options:", options)
-if st.button("Submit"):
-    results_sheet = workbook["results"]
-    # Write the form results to the "results" sheet
-    # (you need to customize this based on your form structure)
-    # results_sheet.append(...)
-    # Save the updated workbook and upload it back to Dropbox
-    updated_content = openpyxl.writer.excel.save_virtual_workbook(workbook)
-    dbx.files_upload(updated_content, file_path, mode=dropbox.files.WriteMode.overwrite)
+
+# Save the form results back to the Excel file
+# Write your code to save the results to the "results" sheet
+
+# Run the Streamlit app
+if __name__ == "__main__":
+    st.title("Your Streamlit App")
+    # Add the rest of your app code here
 
