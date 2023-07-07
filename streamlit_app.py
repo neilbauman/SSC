@@ -6,7 +6,7 @@ dropbox_access_token = "sl.BhslzSQeUA-9MywLRZK3QupDGNiwNzOCf-UowpduhfSRa-vBsIIJ6
 dbx = dropbox.Dropbox(dropbox_access_token)
 
 # Name of the Excel file
-EXCEL_FILE_NAfile_path = "/SSCExcel.xlsx"
+file_path = "/SSCExcel.xlsx"
 _, res = dbx.files_download(file_path)
 content = res.content
 workbook = openpyxl.load_workbook(content)
