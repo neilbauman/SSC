@@ -1,34 +1,29 @@
 import streamlit as st
-import pandas as pd
-import dropbox 
+import openpyxl
+import dropbox
 
-# Dropbox access token
-DROPBOX_ACCESS_TOKEN = "sl.BhuHgiiM5lxIbNasB0mtnw-0sDfV0o4I4v2yQhV53ppNdRdLbWZR6PDGgR5R4DYKvpUODk2_7LxN67XBEd34ANNYiNZIZN5DohgGeM42V-4nnrzxSSs3d4ZPRhmDZSondJHHf9sGflMJ"
+dropbox_access_token = "sl.BhslzSQeUA-9MywLRZK3QupDGNiwNzOCf-UowpduhfSRa-vBsIIJ6AUUVDpRUAyFnSlvyFF2ddXFYATzgmopiJub39mlc_wK5zUlh8Rprok_hxOM2EjZllb9u0Y2yVNqFt4Q8HvVSAOc"
+dbx = dropbox.Dropbox(dropbox_access_token)
 
 # Name of the Excel file
-EXCEL_FILE_NAME = "SSCExcel.xlsx"
+EXCEL_FILE_NAfile_path = "/SSCExcel.xlsx"
+_, res = dbx.files_download(file_path)
+content = res.content
+workbook = openpyxl.load_workbook(content)
 
-# Name of the worksheet containing the options
-WORKSHEET_NAME = "options"
+sheet_options = workbook["options"]
+test_range = sheet_options["test"]
+options = [cell.value for cell in test_range]
 
-# Name of the range in the worksheet
-RANGE_NAME = "test"
 
-# Connect to Dropbox
-dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
-
-# Download the Excel file
-_, res = dbx.files_download("/" + EXCEL_FILE_NAME)
-data = res.content
-
-# Load the Excel file into a pandas DataFrame
-df = pd.read_excel(data, sheet_name=WORKSHEET_NAME, header=None, engine="openpyxl", range=RANGE_NAME)
-
-# Convert DataFrame to a list of options
-options = df[0].tolist()
-
-# Display the checkbox survey question form
+st.title("SSC Navigator")
 selected_options = st.multiselect("Select options:", options)
+if st.button("Submit"):
+    results_sheet = workbook["results"]
+    # Write the form results to the "results" sheet
+    # (you need to customize this based on your form structure)
+    # results_sheet.append(...)
+    # Save the updated workbook and upload it back to Dropbox
+    updated_content = openpyxl.writer.excel.save_virtual_workbook(workbook)
+    dbx.files_upload(updated_content, file_path, mode=dropbox.files.WriteMode.overwrite)
 
-# Show the selected options
-st.write("Selected options:", selected_options)
