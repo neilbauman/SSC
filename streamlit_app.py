@@ -3,7 +3,7 @@ import pandas as pd
 import dropbox 
 
 # Dropbox access token
-DROPBOX_ACCESS_TOKEN = "sl.BhtrxQG9Jq4XSJAQHxPavPEIgR9vfY-pX_ix9sbVrkn4xevr3I1JIykxHFsXEJA7vgqrQeq9iZGJE-VjpQdjuUvl9WjxI3Fa80sehKTKkYot-Xn0FZPY3I6APHIlRFg1V1X2wJXafasP"
+DROPBOX_ACCESS_TOKEN = "sl.Bhv8AX3Dguqq3Kc5Fww_lA5w0k0pJsQ92g4IV5bDasPyCAJKS7_ZGCf2GZezHFQp5pGcoxk1zbTkieGRkprJjzcgb07mE3m0lCvtLoYyM-h9aTxR7eZtf7AS2ov-aS5fTsd4wi4"
 
 # Name of the Excel file
 EXCEL_FILE_NAME = "SSCExcel.xlsx"
